@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>Επιστροφή</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="screen">
+        <h1>ΕΠΙΣΤΡΟΦΗ</h1>
+
+        <form method="post" class="form-box">
+            <label>Barcode / RFID βιβλίου</label>
+            <input type="text" name="item_barcode" autofocus placeholder="Σκανάρετε βιβλίο">
+
+            <button type="submit" class="big-button">ΟΛΟΚΛΗΡΩΣΗ ΕΠΙΣΤΡΟΦΗΣ</button>
+        </form>
+
+        {% if result %}
+            <div class="message {% if result.success %}success{% else %}error{% endif %}">
+                {{ result.message }}
+                {% if result.title %}
+                    <br>{{ result.title }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <a class="back-button" href="/">ΠΙΣΩ</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "sip2_host": "",
+  "sip2_port": 6001,
+  "sip2_username": "",
+  "sip2_password": "",
+  "location_code": "MAIN",
+  "institution_id": "MAIN",
+  "language": "el",
+  "printer_enabled": false,
+  "demo_mode": true
+}

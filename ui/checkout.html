@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>Δανεισμός</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="screen">
+        <h1>ΔΑΝΕΙΣΜΟΣ</h1>
+
+        <form method="post" class="form-box">
+            <label>Κάρτα μέλους</label>
+            <input type="text" name="patron_barcode" autofocus placeholder="Σκανάρετε κάρτα μέλους">
+
+            <label>Barcode / RFID βιβλίου</label>
+            <input type="text" name="item_barcode" placeholder="Σκανάρετε βιβλίο">
+
+            <button type="submit" class="big-button">ΟΛΟΚΛΗΡΩΣΗ ΔΑΝΕΙΣΜΟΥ</button>
+        </form>
+
+        {% if result %}
+            <div class="message {% if result.success %}success{% else %}error{% endif %}">
+                {{ result.message }}
+                {% if result.title %}
+                    <br>{{ result.title }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <a class="back-button" href="/">ΠΙΣΩ</a>
+    </div>
+</body>
+</html>
