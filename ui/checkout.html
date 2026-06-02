@@ -84,7 +84,19 @@
     {% if results %}
         <div class="form-box">
             <h2>Αποτελέσματα Δανεισμού</h2>
+{% if receipt_file %}
 
+<div class="message success">
+
+    Απόδειξη δημιουργήθηκε:
+
+    <br><br>
+
+    {{ receipt_file }}
+
+</div>
+
+{% endif %}
             {% for result in results %}
                 {% if result["success"] %}
                     <div class="message success">
