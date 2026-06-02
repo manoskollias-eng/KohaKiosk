@@ -6,51 +6,97 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="screen">
-        <h1>ΔΑΝΕΙΣΜΟΣ</h1>
 
-        <form method="post" class="form-box" id="checkoutForm">
-            <label>1. Σκανάρετε κάρτα μέλους</label>
-            <input type="text" name="patron_barcode" id="patron" autofocus placeholder="Κάρτα μέλους">
+<div class="screen">
 
-            <label>2. Σκανάρετε βιβλίο / RFID</label>
-            <input type="text" name="item_barcode" id="item" placeholder="Βιβλίο">
+    <h1>ΔΑΝΕΙΣΜΟΣ</h1>
 
-            <button type="submit" class="big-button">ΟΛΟΚΛΗΡΩΣΗ ΔΑΝΕΙΣΜΟΥ</button>
-        </form>
+    <form method="post" action="/checkout" class="form-box" id="checkoutForm">
 
-        {% if result %}
-            <div class="message {% if result["success"] %}success{% else %}error{% endif %}">
+        <label>Κάρτα Μέλους</label>
+
+        <input
+            type="text"
+            name="patron_barcode"
+            id="patron"
+            required
+            autofocus
+            placeholder="Σκανάρετε κάρτα μέλους">
+
+        <label>Barcode / RFID Βιβλίου</label>
+
+        <input
+            type="text"
+            name="item_barcode"
+            id="item"
+            required
+            placeholder="Σκανάρετε βιβλίο">
+
+        <button
+            type="submit"
+            class="big-button">
+            ΟΛΟΚΛΗΡΩΣΗ ΔΑΝΕΙΣΜΟΥ
+        </button>
+
+    </form>
+
+    {% if result %}
+
+        {% if result["success"] %}
+            <div class="message success">
                 {{ result["message"] }}
-                {% if result.get("title") %}
-                    <br>{{ result["title"] }}
-                {% endif %}
+                <br>
+                {{ result["title"] }}
+            </div>
+        {% else %}
+            <div class="message error">
+                {{ result["message"] }}
             </div>
         {% endif %}
 
-        <a class="back-button" href="/">ΠΙΣΩ</a>
-    </div>
+    {% endif %}
 
-    <script>
-        const patron = document.getElementById("patron");
-        const item = document.getElementById("item");
-        const form = document.getElementById("checkoutForm");
+    <a href="/" class="back-button">
+        ΠΙΣΩ
+    </a>
 
-        patron.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                item.focus();
-            }
-        });
+</div>
 
-        item.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                if (patron.value.trim() !== "" && item.value.trim() !== "") {
-                    form.submit();
-                }
-            }
-        });
-    </script>
+<script>
+
+const patron = document.getElementById("patron");
+const item = document.getElementById("item");
+const form = document.getElementById("checkoutForm");
+
+patron.addEventListener("keydown", function(e){
+
+    if(e.key === "Enter"){
+
+        e.preventDefault();
+
+        item.focus();
+    }
+
+});
+
+item.addEventListener("keydown", function(e){
+
+    if(e.key === "Enter"){
+
+        e.preventDefault();
+
+        if(
+            patron.value.trim() !== "" &&
+            item.value.trim() !== ""
+        ){
+            form.submit();
+        }
+
+    }
+
+});
+
+</script>
+
 </body>
 </html>
