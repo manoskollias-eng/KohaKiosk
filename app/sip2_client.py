@@ -49,6 +49,24 @@ class DemoSIP2Client:
             "patron": patron
         }
 
+    def item_info(self, item_barcode):
+
+        item = self.items.get(item_barcode)
+
+        if not item:
+            return {
+                "success": False,
+                "message": "Το βιβλίο δεν βρέθηκε",
+                "barcode": item_barcode
+            }
+
+        return {
+            "success": True,
+            "barcode": item_barcode,
+            "title": item["title"],
+            "status": item["status"]
+        }
+
     def checkout(self, patron_barcode, item_barcode):
 
         patron = self.patrons.get(patron_barcode)

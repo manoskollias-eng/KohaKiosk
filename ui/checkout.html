@@ -57,7 +57,7 @@
             {% if session["items"] %}
                 <ul class="book-list">
                     {% for item in session["items"] %}
-                        <li>✓ {{ item }}</li>
+                        <li>✓ {{ item["barcode"] }} - {{ item["title"] }}</li>
                     {% endfor %}
                 </ul>
             {% else %}
