@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>Ο Λογαριασμός Μου</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="screen">
+
+    <h1>Ο ΛΟΓΑΡΙΑΣΜΟΣ ΜΟΥ</h1>
+
+    {% if not patron %}
+
+    <form method="post" action="/account" class="form-box">
+
+        <label>Σκανάρετε κάρτα μέλους</label>
+
+        <input
+            type="text"
+            name="patron_barcode"
+            autofocus
+            required
+            placeholder="Κάρτα μέλους">
+
+        <button type="submit" class="big-button">
+            ΑΝΑΖΗΤΗΣΗ
+        </button>
+
+    </form>
+
+    {% else %}
+
+    <div class="message success">
+
+        <h2>{{ patron["name"] }}</h2>
+
+        <p>
+            Κατάσταση:
+            {{ patron["status"] }}
+        </p>
+
+    </div>
+
+    <div class="form-box">
+
+        <h2>Δανεισμένα Βιβλία</h2>
+
+        {% if loans %}
+
+            <ul class="book-list">
+
+                {% for loan in loans %}
+                    <li>{{ loan }}</li>
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <div class="message">
+                Δεν υπάρχουν δανεισμένα βιβλία.
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+    <a href="/" class="back-button">
+        ΠΙΣΩ
+    </a>
+
+</div>
+
+</body>
+</html>

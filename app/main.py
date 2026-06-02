@@ -146,7 +146,55 @@ async def checkin_action(
         }
     )
 
+@app.get("/account", response_class=HTMLResponse)
+async def account_page(request: Request):
 
+    return templates.TemplateResponse(
+        request=request,
+        name="account.html",
+        context={
+            "patron": None
+        }
+    )
+
+
+@app.post("/account", response_class=HTMLResponse)
+async def account_lookup(
+    request: Request,
+    patron_barcode: str = Form(...)
+):
+
+    result = client.patron_info(patron_barcode)
+
+    if not result["success"]:
+
+        return templates.TemplateResponse(
+            request=request,
+            name="account.html",
+            context={
+                "patron": None
+            }
+        )
+
+    patron = result["patron"]
+
+    loan_titles = []
+
+    for barcode in patron["loans"]:
+
+        info = client.item_info(barcode)
+
+        if info["success"]:
+            loan_titles.append(info["title"])
+
+    return templates.TemplateResponse(
+        request=request,
+        name="account.html",
+        context={
+            "patron": patron,
+            "loans": loan_titles
+        }
+    ) 
 @app.get("/health")
 async def health():
 
