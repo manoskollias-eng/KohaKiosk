@@ -1,5 +1,7 @@
 class DemoSIP2Client:
+
     def __init__(self):
+
         self.patrons = {
             "1001": {
                 "name": "Demo User",
@@ -16,10 +18,23 @@ class DemoSIP2Client:
             "B002": {
                 "title": "Εισαγωγή στο Koha",
                 "status": "available"
+            },
+            "B003": {
+                "title": "RFID Handbook",
+                "status": "available"
+            },
+            "B004": {
+                "title": "Library Automation",
+                "status": "available"
+            },
+            "B005": {
+                "title": "FastAPI Guide",
+                "status": "available"
             }
         }
 
     def patron_info(self, patron_barcode):
+
         patron = self.patrons.get(patron_barcode)
 
         if not patron:
@@ -35,6 +50,7 @@ class DemoSIP2Client:
         }
 
     def checkout(self, patron_barcode, item_barcode):
+
         patron = self.patrons.get(patron_barcode)
         item = self.items.get(item_barcode)
 
@@ -66,6 +82,7 @@ class DemoSIP2Client:
         }
 
     def checkin(self, item_barcode):
+
         item = self.items.get(item_barcode)
 
         if not item:
@@ -77,6 +94,7 @@ class DemoSIP2Client:
         item["status"] = "available"
 
         for patron in self.patrons.values():
+
             if item_barcode in patron["loans"]:
                 patron["loans"].remove(item_barcode)
 

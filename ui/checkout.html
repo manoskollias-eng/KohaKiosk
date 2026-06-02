@@ -11,49 +11,95 @@
 
     <h1>ΔΑΝΕΙΣΜΟΣ</h1>
 
-    <form method="post" action="/checkout" class="form-box" id="checkoutForm">
+    {% if not session["patron_barcode"] %}
 
-        <label>Κάρτα Μέλους</label>
+        <form method="post" action="/checkout/set-patron" class="form-box" id="patronForm">
+            <label>Σκανάρετε κάρτα μέλους</label>
 
-        <input
-            type="text"
-            name="patron_barcode"
-            id="patron"
-            required
-            autofocus
-            placeholder="Σκανάρετε κάρτα μέλους">
+            <input
+                type="text"
+                name="patron_barcode"
+                id="patron"
+                required
+                autofocus
+                placeholder="Κάρτα μέλους">
 
-        <label>Barcode / RFID Βιβλίου</label>
+            <button type="submit" class="big-button">
+                ΣΥΝΕΧΕΙΑ
+            </button>
+        </form>
 
-        <input
-            type="text"
-            name="item_barcode"
-            id="item"
-            required
-            placeholder="Σκανάρετε βιβλίο">
+    {% else %}
 
-        <button
-            type="submit"
-            class="big-button">
-            ΟΛΟΚΛΗΡΩΣΗ ΔΑΝΕΙΣΜΟΥ
-        </button>
+        <div class="message success">
+            Μέλος: {{ session["patron_barcode"] }}
+        </div>
 
-    </form>
+        <form method="post" action="/checkout/add-item" class="form-box" id="itemForm">
+            <label>Σκανάρετε βιβλίο / RFID</label>
 
-    {% if result %}
+            <input
+                type="text"
+                name="item_barcode"
+                id="item"
+                required
+                autofocus
+                placeholder="Barcode / RFID βιβλίου">
 
-        {% if result["success"] %}
-            <div class="message success">
-                {{ result["message"] }}
-                <br>
-                {{ result["title"] }}
-            </div>
-        {% else %}
-            <div class="message error">
-                {{ result["message"] }}
-            </div>
-        {% endif %}
+            <button type="submit" class="big-button">
+                ΠΡΟΣΘΗΚΗ ΒΙΒΛΙΟΥ
+            </button>
+        </form>
 
+        <div class="form-box">
+            <h2>Βιβλία προς δανεισμό</h2>
+
+            {% if session["items"] %}
+                <ul class="book-list">
+                    {% for item in session["items"] %}
+                        <li>✓ {{ item }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="message">
+                    Δεν έχει προστεθεί βιβλίο ακόμα.
+                </div>
+            {% endif %}
+
+            <form method="post" action="/checkout/complete">
+                <button type="submit" class="big-button">
+                    ΟΛΟΚΛΗΡΩΣΗ ΔΑΝΕΙΣΜΟΥ
+                </button>
+            </form>
+
+            <form method="post" action="/checkout/clear">
+                <button type="submit" class="back-button">
+                    ΚΑΘΑΡΙΣΜΟΣ
+                </button>
+            </form>
+        </div>
+
+    {% endif %}
+
+    {% if results %}
+        <div class="form-box">
+            <h2>Αποτελέσματα Δανεισμού</h2>
+
+            {% for result in results %}
+                {% if result["success"] %}
+                    <div class="message success">
+                        ✓ {{ result["barcode"] }}<br>
+                        {{ result["title"] }}<br>
+                        {{ result["message"] }}
+                    </div>
+                {% else %}
+                    <div class="message error">
+                        ✗ {{ result["barcode"] }}<br>
+                        {{ result["message"] }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     {% endif %}
 
     <a href="/" class="back-button">
@@ -63,39 +109,34 @@
 </div>
 
 <script>
-
 const patron = document.getElementById("patron");
 const item = document.getElementById("item");
-const form = document.getElementById("checkoutForm");
+const patronForm = document.getElementById("patronForm");
+const itemForm = document.getElementById("itemForm");
 
-patron.addEventListener("keydown", function(e){
+if (patron) {
+    patron.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
 
-    if(e.key === "Enter"){
-
-        e.preventDefault();
-
-        item.focus();
-    }
-
-});
-
-item.addEventListener("keydown", function(e){
-
-    if(e.key === "Enter"){
-
-        e.preventDefault();
-
-        if(
-            patron.value.trim() !== "" &&
-            item.value.trim() !== ""
-        ){
-            form.submit();
+            if (patron.value.trim() !== "") {
+                patronForm.submit();
+            }
         }
+    });
+}
 
-    }
+if (item) {
+    item.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
 
-});
-
+            if (item.value.trim() !== "") {
+                itemForm.submit();
+            }
+        }
+    });
+}
 </script>
 
 </body>
