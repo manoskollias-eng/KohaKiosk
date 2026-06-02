@@ -9,26 +9,48 @@
     <div class="screen">
         <h1>ΔΑΝΕΙΣΜΟΣ</h1>
 
-        <form method="post" class="form-box">
-            <label>Κάρτα μέλους</label>
-            <input type="text" name="patron_barcode" autofocus placeholder="Σκανάρετε κάρτα μέλους">
+        <form method="post" class="form-box" id="checkoutForm">
+            <label>1. Σκανάρετε κάρτα μέλους</label>
+            <input type="text" name="patron_barcode" id="patron" autofocus placeholder="Κάρτα μέλους">
 
-            <label>Barcode / RFID βιβλίου</label>
-            <input type="text" name="item_barcode" placeholder="Σκανάρετε βιβλίο">
+            <label>2. Σκανάρετε βιβλίο / RFID</label>
+            <input type="text" name="item_barcode" id="item" placeholder="Βιβλίο">
 
             <button type="submit" class="big-button">ΟΛΟΚΛΗΡΩΣΗ ΔΑΝΕΙΣΜΟΥ</button>
         </form>
 
         {% if result %}
-            <div class="message {% if result.success %}success{% else %}error{% endif %}">
-                {{ result.message }}
-                {% if result.title %}
-                    <br>{{ result.title }}
+            <div class="message {% if result["success"] %}success{% else %}error{% endif %}">
+                {{ result["message"] }}
+                {% if result.get("title") %}
+                    <br>{{ result["title"] }}
                 {% endif %}
             </div>
         {% endif %}
 
         <a class="back-button" href="/">ΠΙΣΩ</a>
     </div>
+
+    <script>
+        const patron = document.getElementById("patron");
+        const item = document.getElementById("item");
+        const form = document.getElementById("checkoutForm");
+
+        patron.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                item.focus();
+            }
+        });
+
+        item.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                if (patron.value.trim() !== "" && item.value.trim() !== "") {
+                    form.submit();
+                }
+            }
+        });
+    </script>
 </body>
 </html>
